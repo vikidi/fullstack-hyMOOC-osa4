@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "lint": "eslint ."
   },
   "repository": {
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/vikidi/fullstack-hyMOOC-osa4#readme",
   "devDependencies": {
     "eslint": "^7.9.0",
+    "jest": "^26.4.2",
     "nodemon": "^2.0.4"
   },
   "dependencies": {
