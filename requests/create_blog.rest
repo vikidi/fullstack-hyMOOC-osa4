@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "My Sunday With Full Stack",
+    "author": "Ville Saarinen",
+    "url": "http://localhost:3003",
+    "likes": 1
+}
