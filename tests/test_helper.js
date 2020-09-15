@@ -16,17 +16,34 @@ const initialBlogs = [
 ]
 
 const nonExistingId = async () => {
-    const blog = new Blog({
+    let blog = new Blog({
         title: 'First class tests',
         author: 'Robert C. Martin',
         url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
         likes: 10
     })
 
-    await blog.save()
+    blog = await blog.save()
     await blog.remove()
 
     return blog._id.toString()
+}
+
+const nonExistingBlog = async () => {
+    let blog = new Blog({
+        title: 'First class tests',
+        author: 'Robert C. Martin',
+        url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+        likes: 10
+    })
+
+    blog = await blog.save()
+    await blog.remove()
+
+    delete blog._id
+    delete blog.__v
+
+    return blog
 }
 
 const blogsInDb = async () => {
@@ -35,5 +52,8 @@ const blogsInDb = async () => {
 }
 
 module.exports = {
-    initialBlogs, nonExistingId, blogsInDb
+    initialBlogs,
+    nonExistingId,
+    nonExistingBlog,
+    blogsInDb
 }

@@ -39,8 +39,28 @@ describe('GET /api/blogs', () => {
     test('a specific blog is within the returned blogs', async () => {
         const response = await api.get('/api/blogs')
 
-        const contents = response.body.map(r => r.title)
-        expect(contents).toContain('Canonical string reduction')
+        const titles = response.body.map(r => r.title)
+        expect(titles).toContain('Canonical string reduction')
+    })
+})
+
+describe('POST /api/blogs', () => {
+    test('a valid blog can be added', async () => {
+        const newBlog = await helper.nonExistingBlog()
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+
+        const titles = blogsAtEnd.map(n => n.title)
+        expect(titles).toContain(
+            'First class tests'
+        )
     })
 })
 
