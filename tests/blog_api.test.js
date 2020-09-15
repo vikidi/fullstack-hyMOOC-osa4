@@ -78,6 +78,34 @@ describe('POST /api/blogs', () => {
 
         expect(addedBlog[0].likes).toBe(0)
     })
+
+    test('blog without title will not be added', async () => {
+        let newBlog = await helper.nonExistingBlog()
+        delete newBlog.title // No likes defined
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+
+        const blogsAtEnd = await helper.blogsInDb()
+
+        expect(blogsAtEnd.length).toBe(helper.initialBlogs.length)
+    })
+
+    test('blog without url will not be added', async () => {
+        let newBlog = await helper.nonExistingBlog()
+        delete newBlog.url // No likes defined
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+
+        const blogsAtEnd = await helper.blogsInDb()
+
+        expect(blogsAtEnd.length).toBe(helper.initialBlogs.length)
+    })
 })
 
 afterAll(() => {
