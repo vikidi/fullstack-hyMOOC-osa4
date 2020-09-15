@@ -108,6 +108,62 @@ describe('POST /api/blogs', () => {
     })
 })
 
+describe('DELETE /api/blogs/:id', () => {
+    test('successfull delete with valid id', async () => {
+        const blogsAtBeginning = await helper.blogsInDb()
+        const id = blogsAtBeginning[0].id
+
+        await api
+            .delete(`/api/blogs/${id}`)
+            .expect(204)
+
+        const blogsAtEnd = await helper.blogsInDb()
+
+        expect(blogsAtEnd.length).toBe(blogsAtBeginning.length - 1)
+        expect(blogsAtEnd.filter(blog => blog.id === id).length).toBe(0)
+    })
+
+    test('id not found, returns 204', async () => {
+        const blogsAtEBeginning = await helper.blogsInDb()
+        const id = await helper.nonExistingId()
+
+        await api
+            .delete(`/api/blogs/${id}`)
+            .expect(204)
+
+        const blogsAtEnd = await helper.blogsInDb()
+
+        expect(blogsAtEnd.length).toBe(blogsAtEBeginning.length)
+    })
+
+    test('invalid id, returns 400', async () => {
+        const blogsAtEBeginning = await helper.blogsInDb()
+        const id = 'INVALID_ID'
+
+        await api
+            .delete(`/api/blogs/${id}`)
+            .expect(400)
+
+        const blogsAtEnd = await helper.blogsInDb()
+
+        expect(blogsAtEnd.length).toBe(blogsAtEBeginning.length)
+    })
+})
+
+describe('PUT /api/blogs/:id', () => {
+    test('successfully updated with valid id', async () => {
+
+    })
+
+    test('id not found, returns 404', async () => {
+
+    })
+
+    test('invalid id, returns 400', async () => {
+
+    })
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })
