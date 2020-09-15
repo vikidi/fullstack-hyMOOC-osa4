@@ -20,6 +20,16 @@ describe('GET /api/blogs', () => {
             .expect('Content-Type', /application\/json/)
     })
 
+    test('blog objects contain id field, not _id', async () => {
+        const response = await api.get('/api/blogs')
+
+        // Test for all returned blogs, testing one might be enough
+        for (let blog of response.body) {
+            expect(blog.id).toBeDefined()
+            expect(blog._id).not.toBeDefined()
+        }
+    })
+
     test('all blogs are returned', async () => {
         const response = await api.get('/api/blogs')
 

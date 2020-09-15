@@ -1,6 +1,6 @@
 const ld = require('lodash')
 
-const dummy = (blogs) => {
+const dummy = (/* blogs */) => { // No need for param 'blogs' to be defined, not used in function
     return 1
 }
 

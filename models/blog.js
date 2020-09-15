@@ -7,6 +7,7 @@ const blogSchema = new mongoose.Schema({
     likes: Number
 })
 
+// Modify the JSON objects to be more usable
 blogSchema.set('toJSON', {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
