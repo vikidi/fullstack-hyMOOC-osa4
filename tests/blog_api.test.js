@@ -152,15 +152,59 @@ describe('DELETE /api/blogs/:id', () => {
 
 describe('PUT /api/blogs/:id', () => {
     test('successfully updated with valid id', async () => {
+        const blogToUpdate = (await helper.blogsInDb())[0]
+        const newTitle = 'New Title'
+        const id = blogToUpdate.id
 
+        blogToUpdate.title = newTitle
+        delete blogToUpdate.id
+
+        const response = await api
+            .put(`/api/blogs/${id}`)
+            .send(blogToUpdate)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        const blogsAtEnd = await helper.blogsInDb()
+
+        expect(response.body.title).toBe(newTitle)
+        expect(blogsAtEnd.filter(blog => blog.id === id)[0].title).toBe(newTitle)
     })
 
     test('id not found, returns 404', async () => {
+        const blogsAtBeginning = await helper.blogsInDb()
+        const blogToUpdate = { ...blogsAtBeginning[0] }
+        const newTitle = 'New Title'
 
+        blogToUpdate.title = newTitle
+        delete blogToUpdate.id
+
+        await api
+            .put(`/api/blogs/${await helper.nonExistingId()}`)
+            .send(blogToUpdate)
+            .expect(404)
+
+        const blogsAtEnd = await helper.blogsInDb()
+
+        expect(blogsAtEnd).toEqual(blogsAtBeginning)
     })
 
     test('invalid id, returns 400', async () => {
+        const blogsAtBeginning = await helper.blogsInDb()
+        const blogToUpdate = { ...blogsAtBeginning[0] }
+        const newTitle = 'New Title'
 
+        blogToUpdate.title = newTitle
+        delete blogToUpdate.id
+
+        await api
+            .put('/api/blogs/INVALID_ID')
+            .send(blogToUpdate)
+            .expect(400)
+
+        const blogsAtEnd = await helper.blogsInDb()
+
+        expect(blogsAtEnd).toEqual(blogsAtBeginning)
     })
 })
 
