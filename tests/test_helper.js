@@ -23,7 +23,7 @@ const nonExistingId = async () => {
         likes: 10
     })
 
-    blog = await blog.save()
+    await blog.save()
     await blog.remove()
 
     return blog._id.toString()
@@ -37,11 +37,11 @@ const nonExistingBlog = async () => {
         likes: 10
     })
 
-    blog = await blog.save()
+    await blog.save()
     await blog.remove()
 
-    delete blog._id
-    delete blog.__v
+    blog = blog.toJSON()
+    delete blog.id
 
     return blog
 }

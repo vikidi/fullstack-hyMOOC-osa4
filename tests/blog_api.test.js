@@ -62,6 +62,22 @@ describe('POST /api/blogs', () => {
             'First class tests'
         )
     })
+
+    test('blog with likes not defined can be added with 0 likes', async () => {
+        let newBlog = await helper.nonExistingBlog()
+        delete newBlog.likes // No likes defined
+
+        const response = await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const blogsAtEnd = await helper.blogsInDb()
+        const addedBlog = blogsAtEnd.filter(blog => blog.id === response.body.id)
+
+        expect(addedBlog[0].likes).toBe(0)
+    })
 })
 
 afterAll(() => {
